@@ -4,9 +4,11 @@ import {
   getUsersRequest,
   createUserRequest,
   deleteUserRequest,
+  usersError,
 } from '../actions/users';
 import UsersList from './UsersList';
 import NewUserForm from './NewUserForm';
+import { Alert } from 'reactstrap';
 
 class App extends Component {
   constructor(props) {
@@ -26,10 +28,23 @@ class App extends Component {
     this.props.deleteUserRequest(userId);
   };
 
+  handleCloseAlert = () => {
+    this.props.usersError({
+      error: '',
+    });
+  };
+
   render() {
     const users = this.props.users;
     return (
       <div style={{ margin: '0 auto', padding: '20px', maxWidth: '600px' }}>
+        <Alert
+          color="danger"
+          isOpen={!!users.error}
+          toggle={this.handleCloseAlert}
+        >
+          {users.error}
+        </Alert>
         <NewUserForm onSubmit={this.handleSubmit} />
         <UsersList
           users={users.items}
@@ -44,4 +59,5 @@ export default connect(({ users }) => ({ users }), {
   getUsersRequest,
   createUserRequest,
   deleteUserRequest,
+  usersError,
 })(App);
